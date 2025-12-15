@@ -343,18 +343,16 @@
         </div>
     </section>
 
-    <section id="ai-tools" class="container">
-        <h2>🧠 Interagisci con un Sistema Intelligente (Demo)</h2>
-        <div class="glass-card tool-demo">
-            <h3>Simulatore di Score/Qualificazione</h3>
-            <p style="color: var(--color-text-dim); margin-bottom: 20px;">Questa demo simula la capacità di un sistema AI di assegnare un punteggio o qualificare un input, come nei flussi di Lead Generation.</p>
-            
-            <input type="text" id="ai-input" placeholder="Es. Nome azienda e settore da qualificare..." aria-label="Input AI Demo">
-            <button class="btn" onclick="simulateAITool()">Assegna Score AI</button>
-            
-            <p id="ai-output" style="margin-top: 20px; font-weight: bold; color: var(--color-primary);"></p>
+    <section id="chatbot-bonus" class="container">
+    <h2>🤖 Chatta con il Mio Agente AI</h2>
+    <div class="glass-card" style="max-width: 600px; margin: 0 auto;">
+        <div id="chat-window" style="height: 300px; overflow-y: scroll; border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px; background-color: rgba(0, 0, 0, 0.2);">
+            <p style="color: var(--color-primary); margin-bottom: 10px;">**Agente AI Marika:** Ciao! Sono l'agente conversazionale di Marika. Chiedimi delle sue competenze in Data Analysis (SQL, Python) o Business Automation (n8n, flussi AI)!</p>
         </div>
-    </section>
+        <input type="text" id="chat-input" placeholder="Chiedi: Qual è il suo miglior progetto di automazione?" aria-label="Input Chatbot">
+        <button class="btn" onclick="sendChatQuery()">Invia</button>
+    </div>
+ </section>
 
 
     <section id="contact" class="container">
@@ -379,7 +377,12 @@
         <p>&copy; 2025 Marika Santomauro | Ecosistema Web. Progettato con l'aiuto di Gemini.</p>
     </footer>
 
+   <footer>
+        <p>&copy; 2025 Marika Santomauro | Ecosistema Web. Progettato con l'aiuto di Gemini.</p>
+    </footer>
+
     <script>
+        // Funzione originale per la sezione 'Try My AI Tools'
         function simulateAITool() {
             const input = document.getElementById('ai-input').value;
             const output = document.getElementById('ai-output');
@@ -390,7 +393,7 @@
             }
 
             // Simulazione di assegnazione di uno Score di Bontà (0-5)
-            const score = Math.floor(Math.random() * 6); // Genera un numero intero tra 0 e 5
+            const score = Math.floor(Math.random() * 6); 
             
             let message = '';
             if (score >= 4) {
@@ -398,13 +401,71 @@
             } else if (score >= 2) {
                 message = `⚠️ Potenziale Medio. Score Assegnato: ${score}/5. Richiede ulteriore qualificazione manuale.`;
             } else {
-                message = `❌ Basso Potenziale. Score Assegnato: ${score}/5. Da scartare o rimettere in lista nurturing.`;
+                message = `❌ Basso Potenziale! Score Assegnato: ${score}/5. Da scartare o rimettere in lista nurturing.`;
             }
             
             output.textContent = `Risultato simulato per "${input.substring(0, 30)}...": ${message}`;
             
-            // Pulisce l'input dopo l'esecuzione
             document.getElementById('ai-input').value = ''; 
+        }
+
+        // --- NUOVA LOGICA CHATBOT SIMULATO ---
+        
+        // Simula la chiamata API e genera una risposta basata su parole chiave
+        async function fetchAIResponse(query) {
+            
+            // Simula un ritardo di rete per realismo
+            await new Promise(resolve => setTimeout(resolve, 1500)); 
+
+            const lowerQuery = query.toLowerCase();
+            
+            // Logica basata sulle tue competenze chiave:
+            if (lowerQuery.includes("sql") || lowerQuery.includes("database") || lowerQuery.includes("er")) {
+                return "Sono esperta nella creazione di diagrammi ER e nell'uso di MySQL per l'interrogazione, estrazione e gestione di database complessi. Posso gestire le tabelle relazionali per garantire l'integrità dei dati.";
+            } else if (lowerQuery.includes("automazione") || lowerQuery.includes("n8n") || lowerQuery.includes("flussi")) {
+                return "La mia specializzazione è nella Business Automation, in particolare con n8n, integrando AI e API per creare flussi end-to-end, come quelli di qualificazione lead, marketing e customer service schedulati.";
+            } else if (lowerQuery.includes("python") || lowerQuery.includes("pandas") || lowerQuery.includes("numpy")) {
+                return "Utilizzo Python con librerie essenziali come Pandas per la manipolazione avanzata, NumPy per il calcolo scientifico e Matplotlib per visualizzazioni efficaci dei dati per lo storytelling.";
+            } else if (lowerQuery.includes("progetto") || lowerQuery.includes("lead") || lowerQuery.includes("qualificazione")) {
+                return "Il mio progetto di punta è il flusso schedulato di Lead Qualification: ricerca su LinkedIn, scoring con AI e caricamento automatico in AirTable. Un vero sistema dinamico che ottimizza il tempo del team di vendita.";
+            } else if (lowerQuery.includes("excel") || lowerQuery.includes("report")) {
+                return "Ho una competenza avanzata in Excel, incluse Tabelle Pivot e funzioni complesse, essenziale per la reportistica rapida e la data preparation prima dell'analisi in Python.";
+            } else {
+                return "Bella domanda! Sono specializzata in Data Analysis (SQL, Python) e in Business Automation. Potresti chiedermi qualcosa di più specifico sui miei tool o sui miei progetti!";
+            }
+        }
+
+        // Funzione per gestire l'interazione nella chat
+        async function sendChatQuery() {
+            const input = document.getElementById('chat-input');
+            const window = document.getElementById('chat-window');
+            const query = input.value.trim();
+
+            if (!query) return;
+
+            // 1. Aggiungi la domanda dell'utente
+            window.innerHTML += `<p style="color: var(--color-secondary); text-align: right; margin-bottom: 10px;">**Tu:** ${query}</p>`;
+            window.scrollTop = window.scrollHeight; 
+
+            // 2. Placeholder del caricamento
+            window.innerHTML += `<p id="loading-dots" style="color: var(--color-text-dim); margin-bottom: 10px;">**Agente AI Marika:** ...pensando...</p>`;
+            window.scrollTop = window.scrollHeight;
+            
+            input.value = '';
+            input.disabled = true; // Disabilita l'input mentre l'AI "pensa"
+
+            // 3. Ottieni la risposta (simulata come se fosse una API reale)
+            const response = await fetchAIResponse(query);
+
+            // 4. Rimuovi i puntini e mostra la risposta
+            const loadingDots = document.getElementById('loading-dots');
+            if (loadingDots) loadingDots.remove();
+            
+            window.innerHTML += `<p style="color: var(--color-primary); margin-bottom: 10px;">**Agente AI Marika:** ${response}</p>`;
+            window.scrollTop = window.scrollHeight;
+
+            input.disabled = false; // Riabilita l'input
+            input.focus();
         }
     </script>
 </body>
