@@ -375,30 +375,6 @@
 
 
     <script>
-        // Simula la chiamata API e genera una risposta basata su parole chiave per il CHATBOT
-        async function fetchAIResponse(query) {
-            
-            // Simula un ritardo di rete per realismo
-            await new Promise(resolve => setTimeout(resolve, 1500)); 
-
-            const lowerQuery = query.toLowerCase();
-            
-            // Logica basata sulle tue competenze chiave:
-            if (lowerQuery.includes("sql") || lowerQuery.includes("database") || lowerQuery.includes("er")) {
-                return "Sono esperta nella creazione di diagrammi ER e nell'uso di MySQL per l'interrogazione, estrazione e gestione di database complessi. Posso gestire le tabelle relazionali per garantire l'integrità dei dati.";
-            } else if (lowerQuery.includes("automazione") || lowerQuery.includes("n8n") || lowerQuery.includes("flussi")) {
-                return "La mia specializzazione è nella Business Automation, in particolare con n8n, integrando AI e API per creare flussi end-to-end, come quelli di qualificazione lead, marketing e customer service schedulati.";
-            } else if (lowerQuery.includes("python") || lowerQuery.includes("pandas") || lowerQuery.includes("numpy")) {
-                return "Utilizzo Python con librerie essenziali come Pandas per la manipolazione avanzata, NumPy per il calcolo scientifico e Matplotlib per visualizzazioni efficaci dei dati per lo storytelling.";
-            } else if (lowerQuery.includes("progetto") || lowerQuery.includes("lead") || lowerQuery.includes("qualificazione")) {
-                return "Il mio progetto di punta è il flusso schedulato di Lead Qualification: ricerca su LinkedIn, scoring con AI e caricamento automatico in AirTable. Un vero sistema dinamico che ottimizza il tempo del team di vendita.";
-            } else if (lowerQuery.includes("excel") || lowerQuery.includes("report")) {
-                return "Ho una competenza avanzata in Excel, incluse Tabelle Pivot e funzioni complesse, essenziale per la reportistica rapida e la data preparation prima dell'analisi in Python.";
-            } else {
-                return "Bella domanda! Sono specializzata in Data Analysis (SQL, Python) e in Business Automation. Potresti chiedermi qualcosa di più specifico sui miei tool o sui miei progetti!";
-            }
-        }
-
         // Funzione per gestire l'interazione nella chat
         async function sendChatQuery() {
             const input = document.getElementById('chat-input');
@@ -416,20 +392,38 @@
             window.scrollTop = window.scrollHeight;
             
             input.value = '';
-            input.disabled = true; // Disabilita l'input mentre l'AI "pensa"
+            input.disabled = true; // Disabilita l'input
 
-            // 3. Ottieni la risposta (simulata come se fosse una API reale)
-            const response = await fetchAIResponse(query);
+            try {
+                // 3. CHIAMA L'ENDPOINT SERVERLESS (chatbot.js)
+                const response = await fetch('/.netlify/functions/chatbot', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: query })
+                });
 
-            // 4. Rimuovi i puntini e mostra la risposta
-            const loadingDots = document.getElementById('loading-dots');
-            if (loadingDots) loadingDots.remove();
-            
-            window.innerHTML += `<p style="color: var(--color-primary); margin-bottom: 10px;">**Agente AI Marika:** ${response}</p>`;
-            window.scrollTop = window.scrollHeight;
+                if (!response.ok) {
+                    throw new Error(`Errore di rete: ${response.status}`);
+                }
 
-            input.disabled = false; // Riabilita l'input
-            input.focus();
+                const data = await response.json();
+                const aiResponse = data.response || "Ops! Qualcosa è andato storto nel backend AI.";
+
+                // 4. Mostra la risposta
+                const loadingDots = document.getElementById('loading-dots');
+                if (loadingDots) loadingDots.remove();
+                
+                window.innerHTML += `<p style="color: var(--color-primary); margin-bottom: 10px;">**Agente AI Marika:** ${aiResponse}</p>`;
+                window.scrollTop = window.scrollHeight;
+
+            } catch (error) {
+                const loadingDots = document.getElementById('loading-dots');
+                if (loadingDots) loadingDots.remove();
+                window.innerHTML += `<p style="color: red; margin-bottom: 10px;">**Errore:** Non è stato possibile connettersi al backend AI. Dettagli: ${error.message}</p>`;
+            } finally {
+                input.disabled = false; // Riabilita l'input
+                input.focus();
+            }
         }
 
         // Funzione per simulare l'engine di Repurposing
@@ -445,60 +439,70 @@
                 return;
             }
 
-            // --- FASE 1: Caricamento e Simulazione API ---
-            statusMessage.textContent = "🚀 Analisi video in corso... (Simulazione chiamata YouTube API e Trascrizione)";
+            // --- FASE 1: Caricamento e Chiamata API ---
+            statusMessage.textContent = "🚀 Analisi video in corso... Chiamata API REALE al backend Netlify.";
             resultsDiv.innerHTML = '';
             linkInput.disabled = true;
-            
-            await new Promise(resolve => setTimeout(resolve, 2000)); 
 
-            // --- FASE 2: Simulazione output dell'AI (Gemini) ---
-            statusMessage.textContent = "🧠 Generazione dei contenuti creativi con Gemini...";
-            
-            const simulatedTitle = `Analisi del video: ${videoLink.substring(0, 40)}...`;
+            try {
+                // 3. CHIAMA L'ENDPOINT SERVERLESS (repurpose.js)
+                const response = await fetch('/.netlify/functions/repurpose', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ videoLink: videoLink })
+                });
 
-            // 1. Trascrizione (Placeholder)
-            const transcription = `
-                <h4 style="color: var(--color-secondary); margin-top: 20px;">1. Trascrizione Originale (Estratto)</h4>
-                <blockquote style="border-left: 3px solid var(--color-text-dim); padding-left: 10px; margin-top: 10px;">
-                "Il mercato dei dati è in evoluzione. L'automazione è la chiave per superare i colli di bottiglia e ottimizzare il tempo del team. Con la giusta combinazione di n8n, API e modelli di qualificazione, le aziende possono trasformare il lead flow in una macchina prevedibile."
-                </blockquote>
-            `;
+                if (!response.ok) {
+                    throw new Error(`Errore di rete: ${response.status}`);
+                }
 
-            // 2. Idee Brevi (Shorts/Reels)
-            const shortIdeas = `
-                <h4 style="color: var(--color-secondary); margin-top: 20px;">2. 💡 3 Idee Video Brevi (Shorts/Reels)</h4>
-                <ul>
-                    <li>**Short 1:** '3 Motivi per cui il tuo CRM è lento' - Focus sull'integrazione di n8n.</li>
-                    <li>**Short 2:** 'Il segreto di un Lead Score efficace' - Animazione sul processo di qualificazione AI.</li>
-                    <li>**Short 3:** 'Il Futuro è l'Automazione dei Contenuti' - Estratto chiave sulla riduzione del carico di lavoro.</li>
-                </ul>
-            `;
-            
-            // 3. Post LinkedIn
-            const linkedinPost = `
-                <h4 style="color: var(--color-secondary); margin-top: 20px;">3. 🔗 Post LinkedIn Generato</h4>
-                <pre style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 5px; white-space: pre-wrap;">
-                🚨 STOP ai colli di bottiglia manuali!
-                Il nostro ultimo video mostra come un'automazione intelligente può rendere il tuo flusso di lead prevedibile. La chiave non è solo il dato, ma il sistema dinamico dietro.
-                ✅ Ho usato l'AI per identificare i momenti chiave e creare questi spunti veloci.
-                #DataAutomation #BusinessAutomation #n8n #AI
-                </pre>
-            `;
+                const data = await response.json();
 
-            // 4. Infografica (Placeholder/Link)
-            const infographic = `
-                <p style="margin-top: 20px;">4. 🖼️ **Infografica (Placeholder):** Link alla mappa concettuale generata da Gemini: <a href="#" style="color: var(--color-primary);">Scarica la Mappa del Flusso Automazione</a></p>
-            `;
+                // --- FASE 2: Visualizzazione dei Risultati Reali ---
+                
+                // 1. Trascrizione
+                const transcription = `
+                    <h4 style="color: var(--color-secondary); margin-top: 20px;">1. Trascrizione Originale (Estratto)</h4>
+                    <blockquote style="border-left: 3px solid var(--color-text-dim); padding-left: 10px; margin-top: 10px;">
+                    "${data.transcription || 'Errore nel recupero della trascrizione.'}"
+                    </blockquote>
+                `;
 
-            // --- FASE 3: Visualizzazione Finale ---
-            statusMessage.textContent = `✨ Risultati Generati per ${simulatedTitle}! (Demo completata)`;
-            resultsDiv.innerHTML = transcription + shortIdeas + linkedinPost + infographic;
-            linkInput.disabled = false;
-            linkInput.value = '';
+                // 2. Idee Brevi (Shorts/Reels)
+                const shortIdeas = `
+                    <h4 style="color: var(--color-secondary); margin-top: 20px;">2. 💡 3 Idee Video Brevi (Shorts/Reels)</h4>
+                    <ul>
+                        ${(data.shortIdeas || []).map(idea => `<li>**Short ${idea.id}:** ${idea.text}</li>`).join('')}
+                    </ul>
+                `;
+                
+                // 3. Post LinkedIn
+                const linkedinPost = `
+                    <h4 style="color: var(--color-secondary); margin-top: 20px;">3. 🔗 Post LinkedIn Generato</h4>
+                    <pre style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 5px; white-space: pre-wrap;">
+                    ${data.linkedinPost || 'Errore nella generazione del post LinkedIn.'}
+                    </pre>
+                `;
+
+                // 4. Infografica (Placeholder/Link)
+                const infographic = `
+                    <p style="margin-top: 20px;">4. 🖼️ **Infografica (Placeholder):** Link alla mappa concettuale generata da Gemini: <a href="${data.infographicLink || '#'}" style="color: var(--color-primary);">Scarica la Mappa del Flusso Automazione</a></p>
+                `;
+
+                // --- FASE 3: Visualizzazione Finale ---
+                statusMessage.textContent = `✨ Risultati Generati per ${data.title || 'il tuo video'}! (Demo completata)`;
+                resultsDiv.innerHTML = transcription + shortIdeas + linkedinPost + infographic;
+
+            } catch (error) {
+                statusMessage.textContent = `❌ Errore Critico: Impossibile eseguire la funzione Repurposing. Dettagli: ${error.message}`;
+            } finally {
+                linkInput.disabled = false;
+                linkInput.value = '';
+            }
         }
     </script>
 </body>
 </html>
+
 
 
