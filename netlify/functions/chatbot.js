@@ -1,9 +1,5 @@
 // Questo è Node.js, che verrà eseguito sul server Netlify
-
-// Importiamo l'SDK di Gemini
-// NOTA: Dovrai installare questo pacchetto (Google Gen AI SDK) 
-// nel tuo progetto Netlify tramite il file package.json.
-// Per ora, concentriamoci sulla logica.
+const { Buffer } = require('buffer'); // Aggiungi questa riga
 
 exports.handler = async (event, context) => {
     // 1. Controlla che sia un metodo POST
@@ -20,8 +16,11 @@ exports.handler = async (event, context) => {
     }
 
     try {
-        // Estrai il prompt (la domanda dell'utente) dal corpo della richiesta
-        const { prompt } = JSON.parse(event.body);
+        // --- NUOVA LOGICA DI ESTRAZIONE DATI ROBUSTA ---
+        const body = event.isBase64Encoded ? 
+                     Buffer.from(event.body, 'base64').toString() : 
+                     event.body;
+        const { prompt } = JSON.parse(body);
 
         // --- DEFINIZIONE DEL RUOLO DELL'AI (System Prompt) ---
         const systemPrompt = `Sei Marika, una Data Analyst Junior e specialista in Business Automation. 
@@ -30,9 +29,7 @@ exports.handler = async (event, context) => {
             Rispondi in modo professionale ma amichevole. Non inventare informazioni.`;
 
         // 4. ESECUZIONE DELLA CHIAMATA API (Simulazione per la fase di setup)
-        // In un'implementazione reale, qui useresti il pacchetto SDK di Gemini.
-        // Simuliamo la risposta per ora, in attesa della vera configurazione:
-        
+        // ... (Il resto del codice di risposta del chatbot rimane invariato)
         let aiResponse = "";
         
         if (prompt.toLowerCase().includes("sql")) {
