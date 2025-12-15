@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecosistema AI | Marika Santomauro</title>
+    <style>
+        /* Variabili e Reset */
+        :root {
+            --color-bg: #121218;
+            --color-card-bg: rgba(30, 30, 40, 0.4);
+            --color-primary: #8be9fd; /* Blu chiaro - Data Analysis */
+            --color-secondary: #ff79c6; /* Rosa - Automation */
+            --color-text-light: #f8f8f2;
+            --color-text-dim: #9999aa;
+            --blur-strength: 15px;
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text-light);
+            line-height: 1.6;
+            transition: background-color 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Effetto Card (Liquid Glass/Blur) */
+        .glass-card {
+            background-color: var(--color-card-bg);
+            backdrop-filter: blur(var(--blur-strength));
+            -webkit-backdrop-filter: blur(var(--blur-strength));
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        h1, h2, h3 {
+            color: var(--color-primary);
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            font-size: 2.2em;
+            text-align: center;
+            margin-bottom: 50px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Hero Section */
+        #hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: 40px;
+        }
+
+        .hero-content h1 {
+            font-size: 4em;
+            margin-bottom: 0.2em;
+            color: var(--color-text-light);
+        }
+
+        .hero-content p {
+            font-size: 1.5em;
+            color: var(--color-secondary);
+            margin-bottom: 30px;
+        }
+        
+        .hero-content h3 {
+            color: var(--color-primary);
+            font-size: 1.8em;
+            margin-top: 10px;
+        }
+
+        .btn {
+            background-color: var(--color-secondary);
+            color: var(--color-bg);
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #ff55a2;
+        }
+
+        /* Tooling Section */
+        #tooling ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        #tooling li {
+            background-color: var(--color-secondary);
+            color: var(--color-bg);
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 1.1em;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .skills-card h3 {
+            border-bottom: 2px solid var(--color-primary);
+            padding-bottom: 5px;
+        }
+        
+        .skills-card ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .skills-card li {
+            margin-bottom: 8px;
+            color: var(--color-text-dim);
+        }
+
+
+        /* Showcase Progetti */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .project-card h3 {
+            color: var(--color-secondary);
+        }
+
+        .tags span {
+            display: inline-block;
+            background-color: var(--color-primary);
+            color: var(--color-bg);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-right: 8px;
+        }
+        
+        .project-card small {
+            color: var(--color-text-dim);
+            display: block;
+            margin-top: 10px;
+        }
+
+        /* Form Contatto */
+        #contact form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        #contact label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--color-text-dim);
+        }
+
+        #contact input, #contact textarea {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background-color: rgba(0, 0, 0, 0.3);
+            color: var(--color-text-light);
+            font-size: 1em;
+            resize: vertical;
+        }
+
+        #contact textarea {
+            min-height: 150px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--color-text-dim);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 50px;
+        }
+
+        /* Media Queries per la Responsività */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 3em;
+            }
+            .hero-content p {
+                font-size: 1.2em;
+            }
+            h2 {
+                font-size: 1.8em;
+            }
+            .glass-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <section id="hero" class="container">
+        <div class="hero-content">
+            <h1>Marika Santomauro</h1>
+            <p>Junior Data Analyst & Business Automation Specialist</p>
+            <h3>Trasformo i dati in intuizioni e i processi manuali in flussi automatici intelligenti.</h3>
+            <a href="#projects" class="btn">Vedi i Flussi di Automazione</a>
+        </div>
+    </section>
+
+    <section id="projects" class="container">
+        <h2>🔗 Flussi di Business Automation</h2>
+        <div class="project-grid">
+            
+            <div class="glass-card project-card">
+                <h3>Lead & Qualificazione AI</h3>
+                <small>Ottimizzazione del tempo del team di vendita</small>
+                <p>Flusso schedulato per la ricerca lead su LinkedIn (via Google API), processato dall'AI per assegnare uno **Score di Bontà (0-5)** e caricato in AirTable.</p>
+                <div class="tags">
+                    <span>AI</span>
+                    <span>n8n</span>
+                    <span>API Google</span>
+                    <span>AirTable</span>
+                </div>
+            </div>
+
+            <div class="glass-card project-card">
+                <h3>Marketing Automation (SEO Content)</h3>
+                <small>Garantisce cadenza di pubblicazione e ottimizza strategia SEO</small>
+                <p>Generazione automatica di contenuti per blog/SEO da Google Sheet (anche personalizzati per tipo) tramite AI e pubblicazione diretta su Notion.</p>
+                <div class="tags">
+                    <span>n8n</span>
+                    <span>AI Content</span>
+                    <span>Notion</span>
+                    <span>SEO</span>
+                </div>
+            </div>
+
+            <div class="glass-card project-card">
+                <h3>Customer Service Intelligente</h3>
+                <small>Riduce il carico sul Customer Service e fornisce report immediati</small>
+                <p>Gestione Chatbot/FAQ con auto-risposta. Se fallisce, apre un Ticket automatico su Zendesk. Reportistica giornaliera con riassunto AI per il management.</p>
+                <div class="tags">
+                    <span>Chatbot</span>
+                    <span>Zendesk</span>
+                    <span>AI Summaries</span>
+                    <span>Google Docs</span>
+                </div>
+            </div>
+
+            <div class="glass-card project-card">
+                <h3>Monitoraggio e Gestione Errori</h3>
+                <small>Minimizza i tempi di inattività (downtime)</small>
+                <p>Implementazione di gestione degli errori nei flussi n8n con notifica immediata su Slack in caso di malfunzionamento critico del processo.</p>
+                <div class="tags">
+                    <span>n8n</span>
+                    <span>Slack</span>
+                    <span>Error Handling</span>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+    
+    <section id="tooling" class="container">
+        <h2>📊 Data Analysis & Competenze</h2>
+        <div class="skills-grid">
+            
+            <div class="glass-card skills-card">
+                <h3>Database Management (SQL)</h3>
+                <p>Esperienza nella creazione di diagrammi ER, tabelle relazionali e nella manipolazione di database.</p>
+                <ul>
+                    <li>Conoscenza di **MySQL** per interrogazioni, estrazione e gestione di dati.</li>
+                    <li>Creazione e inserimento dati.</li>
+                </ul>
+            </div>
+            
+            <div class="glass-card skills-card">
+                <h3>Python & Data Science Libraries</h3>
+                <p>Analisi più approfondite dei dati e creazione di modelli preliminari.</p>
+                <ul>
+                    <li>**Pandas**: Manipolazione, pulizia e analisi dei dati complessi.</li>
+                    <li>**NumPy**: Calcolo scientifico e gestione di array.</li>
+                    <li>**Matplotlib**: Visualizzazione grafica e data storytelling.</li>
+                </ul>
+            </div>
+            
+            <div class="glass-card skills-card">
+                <h3>Excel & Data Preparation</h3>
+                <p>Competenza avanzata nella reportistica e nella preparazione iniziale dei set di dati.</p>
+                <ul>
+                    <li>Lettura di file CSV e analisi con funzioni avanzate.</li>
+                    <li>Utilizzo esperto di **Tabelle Pivot** e funzioni complesse.</li>
+                </ul>
+            </div>
+            
+        </div>
+    </section>
+
+    <section id="ai-tools" class="container">
+        <h2>🧠 Interagisci con un Sistema Intelligente (Demo)</h2>
+        <div class="glass-card tool-demo">
+            <h3>Simulatore di Score/Qualificazione</h3>
+            <p style="color: var(--color-text-dim); margin-bottom: 20px;">Questa demo simula la capacità di un sistema AI di assegnare un punteggio o qualificare un input, come nei flussi di Lead Generation.</p>
+            
+            <input type="text" id="ai-input" placeholder="Es. Nome azienda e settore da qualificare..." aria-label="Input AI Demo">
+            <button class="btn" onclick="simulateAITool()">Assegna Score AI</button>
+            
+            <p id="ai-output" style="margin-top: 20px; font-weight: bold; color: var(--color-primary);"></p>
+        </div>
+    </section>
+
+
+    <section id="contact" class="container">
+        <h2>📧 Contattami</h2>
+        <div class="glass-card">
+            <form action="#" method="POST"> 
+                <label for="name">Nome Completo</label>
+                <input type="text" id="name" name="name" placeholder="Il tuo nome" required>
+                
+                <label for="email">Indirizzo Email</label>
+                <input type="email" id="email" name="email" placeholder="la_tua_email@esempio.com" required>
+                
+                <label for="message">Il tuo Messaggio (Parliamo di Automazione o Dati)</label>
+                <textarea id="message" name="message" placeholder="Vorrei discutere un progetto di business automation..." required></textarea>
+                
+                <button type="submit" class="btn">Invia il Messaggio</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Marika Santomauro | Ecosistema Web. Progettato con l'aiuto di Gemini.</p>
+    </footer>
+
+    <script>
+        function simulateAITool() {
+            const input = document.getElementById('ai-input').value;
+            const output = document.getElementById('ai-output');
+
+            if (input.trim() === '') {
+                output.textContent = "⚠ Inserisci un'informazione per eseguire la simulazione di qualificazione.";
+                return;
+            }
+
+            // Simulazione di assegnazione di uno Score di Bontà (0-5)
+            const score = Math.floor(Math.random() * 6); // Genera un numero intero tra 0 e 5
+            
+            let message = '';
+            if (score >= 4) {
+                message = `✅ Alto Potenziale! Score Assegnato: ${score}/5. Raccomandato per un contatto immediato.`;
+            } else if (score >= 2) {
+                message = `⚠️ Potenziale Medio. Score Assegnato: ${score}/5. Richiede ulteriore qualificazione manuale.`;
+            } else {
+                message = `❌ Basso Potenziale. Score Assegnato: ${score}/5. Da scartare o rimettere in lista nurturing.`;
+            }
+            
+            output.textContent = `Risultato simulato per "${input.substring(0, 30)}...": ${message}`;
+            
+            // Pulisce l'input dopo l'esecuzione
+            document.getElementById('ai-input').value = ''; 
+        }
+    </script>
+</body>
+</html>
